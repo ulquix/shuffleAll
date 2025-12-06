@@ -10,13 +10,14 @@ export async function redirectToAuthCodeFlow(clientId: string) {
 
     localStorage.setItem("verifier", verifier);
 
-    const params = new URLSearchParams();
-    params.append("client_id", clientId);
-    params.append("response_type", "code");
-    params.append("redirect_uri", "https://shuffle-all.vercel.app/callback");
-    params.append("scope", "user-read-private user-read-email");
-    params.append("code_challenge_method", "S256");
-    params.append("code_challenge", challenge);
+    const params = new URLSearchParams({
+        client_id: clientId,
+        response_type: "code",
+        redirect_uri: "https://shuffle-all.vercel.app",
+        scope: "user-read-private user-read-email",
+        code_challenge_method: "S256",
+        code_challenge: challenge
+    });
 
     document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
 }
@@ -65,34 +66,35 @@ function populateUI(profile: any) {
     document.getElementById("url")!.setAttribute("href", profile.href);
     document.getElementById("imgUrl")!.innerText = profile.images[0]?.url ?? '(no profile image)';
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getAccessToken(clientId: string, code: string): Promise<string> {
-    if(!code) {
-        throw new Error("Authorization code is required");
-    }
-   const verifier = generateCodeVerifier(128);
-    const challenge = await generateCodeChallenge(verifier);
 
-    localStorage.setItem("verifier", verifier);
+    const verifier = localStorage.getItem("verifier");
+    if (!verifier) throw new Error("No PKCE verifier found.");
 
-    const params = new URLSearchParams();
-    params.append("client_id", clientId);
-    params.append("response_type", "code");
-    params.append("redirect_uri", "https://shuffle-all.vercel.app/callback");
-    params.append("scope", "user-read-private user-read-email");
-    params.append("code_challenge_method", "S256");
-    params.append("code_challenge", challenge);
-
-    document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
-    const result = await fetch("https://accounts.spotify.com/api/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: params
+    const body = new URLSearchParams({
+        client_id: clientId,
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: "https://shuffle-all.vercel.app",
+        code_verifier: verifier
     });
 
-    const { access_token } = await result.json();
-    return access_token;
+    const response = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+        console.error(data);
+        throw new Error("Failed to get access token.");
+    }
+
+    return data.access_token;
 }
+
 if (!code) {
     redirectToAuthCodeFlow(clientId);
 } else {
