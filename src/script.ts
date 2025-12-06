@@ -13,7 +13,7 @@ export async function redirectToAuthCodeFlow(clientId: string) {
         client_id: clientId,
         response_type: "code",
         redirect_uri: "https://shuffle-all.vercel.app",
-        scope: "user-read-private user-read-email playlist-read-private playlist-read-collaborative",
+        scope: "user-read-private user-read-email playlist-read-private playlist-read-collaborative user-library-read",
         code_challenge_method: "S256",
         code_challenge: challenge
     });
@@ -42,7 +42,7 @@ async function generateCodeChallenge(codeVerifier: string) {
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function fetchProfile(token: string): Promise<any> {
-    const result = await fetch("https://api.spotify.com/v1/me", {
+    const result = await fetch("https://api.spotify.com/v1/me/albums", {
         method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
 
