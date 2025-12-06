@@ -1,5 +1,4 @@
 const clientId = "f5380c19e1374deaaa40f63bc4c49c56"; // Replace with your client id
-console.log("Client ID:", clientId);
 
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
@@ -14,7 +13,7 @@ export async function redirectToAuthCodeFlow(clientId: string) {
         client_id: clientId,
         response_type: "code",
         redirect_uri: "https://shuffle-all.vercel.app",
-        scope: "user-read-private user-read-email",
+        scope: "user-read-private user-read-email playlist-read-private playlist-read-collaborative",
         code_challenge_method: "S256",
         code_challenge: challenge
     });
