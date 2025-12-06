@@ -89,7 +89,7 @@ export async function getAccessToken(clientId: string, code: string): Promise<st
 
 // Get saved albums just to confirm token works
 async function fetchSavedAlbums(token: string) {
-  const response = await fetch("https://api.spotify.com/v1/me/albums?limit=20", {
+  const response = await fetch("https://api.spotify.com/v1/me/playlists", {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.json();
