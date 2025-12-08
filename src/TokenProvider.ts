@@ -16,7 +16,7 @@ const code = params.get("code");
             }
     
            else if(token && expiry && now < expiry){
-                console.log("Token is valid:", token);
+                return
             }
             else{
                 const url = "https://accounts.spotify.com/api/token";
