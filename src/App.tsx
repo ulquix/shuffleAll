@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Authcomponent from "./TokenProvider";
-import { fetchProfile } from "./script";
+import { fetchSavedAlbums, fetchProfile } from "./script";
 
 
 const App = () => {
@@ -10,6 +10,9 @@ const App = () => {
     }, []);
 useEffect(() => {
     if (token)
+    fetchSavedAlbums(token!).then(profile => {
+        console.log("User albums:", profile);
+    });
     fetchProfile(token!).then(profile => {
         console.log("User Profile:", profile);
     });
