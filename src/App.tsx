@@ -1,6 +1,6 @@
 import { useEffect ,useState} from "react"
 import Authcomponent from "./TokenProvider"
-import { fetchSavedAlbums ,fetchProfile,createPlaylist,fetchAlbumTracks} from "./script";
+import { fetchSavedAlbums ,fetchProfile,createPlaylist,fetchAlbumTracks,addToQueueBulk} from "./script";
 import type { userProfileExample,savedAlbumsExample } from "./types";
 const App = () => {
     const [token]  = useState(localStorage.getItem("access_token"));
@@ -16,7 +16,7 @@ const App = () => {
             setchosenaIbum([...chosenalbum, id]);
         }
     };
- const mergeAll = async () => {
+ const mergeAll = async (type:string) => {
   const accessToken = localStorage.getItem("access_token") || "";
   const playlist = await createPlaylist(accessToken, profile?.id || "");
 
@@ -36,7 +36,11 @@ const App = () => {
     const j = Math.floor(Math.random() * (i + 1));
     [allTrackUris[i], allTrackUris[j]] = [allTrackUris[j], allTrackUris[i]];
   }
-
+if(type==="queue"){
+  await addToQueueBulk(accessToken, allTrackUris);
+  alert("All selected albums have been added to your queue!");
+  return;
+}
   // Add in chunks of 100
   for (let i = 0; i < allTrackUris.length; i += 100) {
     const chunk = allTrackUris.slice(i, i + 100);
@@ -89,7 +93,7 @@ useEffect(()=>{
                 <li key={album.id} className="mb-2">
                     <p className="font-semibold">{album.name}</p>
                     <p className="text-sm text-gray-400">By {album.owner.display_name}</p>
-                    <img src={album.images[0].url} height={100} width={100} alt="" onClick={()=>tooglearray(album.id)}/>
+                    <img src={album.images?.[0]?.url} height={100} width={100} alt="" onClick={()=>tooglearray(album.id)}/>
                 </li>
             ))}
         </ul>
@@ -107,7 +111,8 @@ useEffect(()=>{
         </ul>
     </div>
 }
-<button onClick={mergeAll}>do it baby</button>
+<button onClick={()=>mergeAll("whatever")}>Create merged playlist</button>
+<button onClick={()=>mergeAll("queue")}>add to queue</button>
         </div>
   )
 }

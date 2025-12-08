@@ -120,3 +120,11 @@ export async function createPlaylist(token: string, userId: string) {
 
   
 }
+export async function addToQueueBulk(token: string, uris: string[]) {
+  for (const uri of uris) {
+    await fetch(`https://api.spotify.com/v1/me/player/queue?uri=${encodeURIComponent(uri)}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+}
