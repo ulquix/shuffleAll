@@ -16,40 +16,44 @@ const App = () => {
             setchosenaIbum([...chosenalbum, id]);
         }
     };
-    const mergemAll = async() => {
-      const playlist = await createPlaylist(localStorage.getItem("access_token")||"",profile?.id||"")
-      const temp:string[] = [];
-      chosenalbum.forEach( async(albumId)=>{
-        const tracksData = await fetchAlbumTracks(localStorage.getItem("access_token")||"", albumId);
+ const mergeAll = async () => {
+  const accessToken = localStorage.getItem("access_token") || "";
+  const playlist = await createPlaylist(accessToken, profile?.id || "");
+
+  // Fetch all album tracks concurrently
+  const allTrackUris = (
+    await Promise.all(
+      chosenalbum.map(async (albumId) => {
+        const tracksData = await fetchAlbumTracks(accessToken, albumId);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const trackUris = tracksData.items.map((item:any) => item.track.uri);
-        temp.push(...trackUris);
-      });
-      // Shuffle the collected track URIs
-      for (let i = temp.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [temp[i], temp[j]] = [temp[j], temp[i]];
-      }
-      // Spotify API allows adding a maximum of 100 tracks at a time
-      const chunkSize = 100;
-      for (let i = 0; i < temp.length; i += chunkSize) {
-        const trackUris = temp.slice(i, i + chunkSize);
-        const url = `https://api.spotify.com/v1/playlists/${playlist.id}/tracks`;
-        const payload = {
-          method:'POST',
-          headers:{
-            'Authorization':`Bearer ${localStorage.getItem("access_token")}`,
-            'Content-Type' : 'application/json'
-          },
-            body : JSON.stringify({
-            uris: trackUris
-          })
-        }
-        await fetch(url, payload);
-      }
-    
-      alert("All selected playlists have been merged into a new playlist!");    
-    }
+        return tracksData.items.map((item: any) => item.track.uri);
+      })
+    )
+  ).flat();
+
+  // Shuffle
+  for (let i = allTrackUris.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [allTrackUris[i], allTrackUris[j]] = [allTrackUris[j], allTrackUris[i]];
+  }
+
+  // Add in chunks of 100
+  for (let i = 0; i < allTrackUris.length; i += 100) {
+    const chunk = allTrackUris.slice(i, i + 100);
+
+    await fetch(`https://api.spotify.com/v1/playlists/${playlist.id}/tracks`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ uris: chunk }),
+    });
+  }
+
+  alert("All selected albums have been merged into a new playlist!");
+};
+
     useEffect(()=>{
         Authcomponent();
     },[])
@@ -103,7 +107,7 @@ useEffect(()=>{
         </ul>
     </div>
 }
-<button onClick={mergemAll}>do it baby</button>
+<button onClick={mergeAll}>do it baby</button>
         </div>
   )
 }
