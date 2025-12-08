@@ -1,13 +1,13 @@
 import { useEffect ,useState} from "react"
 import Authcomponent from "./TokenProvider"
-import { fetchSavedAlbums ,fetchProfile, createPlaylist} from "./script";
+import { fetchSavedAlbums ,fetchProfile} from "./script";
 import type { userProfileExample,savedAlbumsExample } from "./types";
 const App = () => {
-    const [token, setToken]  = useState(localStorage.getItem("access_token"));
+    const [token]  = useState(localStorage.getItem("access_token"));
     const [profile,setProfile]=useState<userProfileExample>();
     const [albums,setalbums]=useState<savedAlbumsExample>();
     const [chosenalbum,setchosenaIbum]=useState<string[]>([]);
-    const [allsongs,setallsongs]=useState<string[]>([]);
+    // const [allsongs,setallsongs]=useState<string[]>([]);
     const tooglearray = (id:string) => {
         if ( chosenalbum.includes(id)) {
             setchosenaIbum(chosenalbum.filter((item) => item !== id));
