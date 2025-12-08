@@ -5,13 +5,13 @@ const Authcomponent = async() => {
 const code = params.get("code");
             const token = localStorage.getItem("access_token");
             const expiry = Number(localStorage.getItem("expiry"));
-            const refreshToken = localStorage.getItem("refresh_token");
+            const refreshToken = localStorage.getItem("refresh_token")!;
             const now = Date.now(); 
-            if(!token || !refreshToken || !code){
+            if(!token && !code){
                 redirectToAuthCodeFlow(import.meta.env.VITE_SPOTIFY_CLIENT_ID);
                 return;
             }
-           else if(code ){
+           else if(code && !(token )){
                 getAccessToken(import.meta.env.VITE_SPOTIFY_CLIENT_ID, code)
             }
     
