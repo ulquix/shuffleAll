@@ -9,6 +9,7 @@ const App = () => {
         Authcomponent()
     }, []);
 useEffect(() => {
+    if (token)
     fetchProfile(token!).then(profile => {
         console.log("User Profile:", profile);
     });
