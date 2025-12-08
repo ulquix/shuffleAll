@@ -1,41 +1,23 @@
 import { useEffect, useState } from "react";
 import Authcomponent from "./TokenProvider";
-import { fetchSavedAlbums, fetchProfile } from "./script";
-import type { savedAlbumsExample, userProfileExample } from "./types";
+import { fetchProfile } from "./script";
+
 
 const App = () => {
-    const [albums, setAlbums] = useState<savedAlbumsExample | null>(null);
-    const [profile, setProfile] = useState<userProfileExample | null>(null);
-
+    const [token] = useState<string | null>(localStorage.getItem("access_token"));
     useEffect(() => {
-        const initializeAuth = async () => {
-            await Authcomponent();
-            const token = localStorage.getItem("access_token");
-            if (token) {
-                const albumsData = await fetchSavedAlbums(token);
-                setAlbums(albumsData);
-                const profileData = await fetchProfile(token);
-                setProfile(profileData);
-            }
-        };
-        initializeAuth();
+        Authcomponent()
     }, []);
-
-    return (<div>
-        <h1>Spotify Shuffle All</h1>
-        {profile && (<div>
-            <h2>Welcome, {profile.display_name}</h2>
-            <p>{profile.email}</p>  
-        </div>)}
-        {albums && (<div>
-            <h2>Your Playlists:</h2>
-            <ul>
-                {albums.items.map((album) => (
-                    <li key={album.id}>{album.name}</li>
-                ))}
-            </ul>
-        </div>)}
-    </div>);
+useEffect(() => {
+    fetchProfile(token!).then(profile => {
+        console.log("User Profile:", profile);
+    });
+    }, [token]);
+    return (
+        <div>
+            <h1>Spotify Auth App</h1>
+        </div>
+    );
 };
 
 export default App;
