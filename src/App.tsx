@@ -10,12 +10,18 @@ import {
 import type { userProfileExample, savedAlbumsExample } from "./types";
 
 // --- COMPONENTS ---
-
+const Spinner = () => (
+  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+  </svg>
+);
 // 1. The Landing Page Component (New)
 const LandingPage = ({ onLogin }: { onLogin: () => void }) => {
     useEffect(() => {   
         if(window.location.search.includes("code"))
         onLogin();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
   return (
     <div className="min-h-screen bg-neutral-900 text-white font-sans selection:bg-green-500 selection:text-black overflow-hidden relative">
@@ -148,7 +154,7 @@ const App = () => {
   const [profile, setProfile] = useState<userProfileExample>();
   const [albums, setalbums] = useState<savedAlbumsExample>();
   const [chosenalbum, setchosenaIbum] = useState<string[]>([]);
-
+const [loadingState, setLoadingState] = useState<'idle' | 'queue' | 'playlist'>('idle');
   const handleLogin = () => {
     Authcomponent();
   };
@@ -163,7 +169,7 @@ const App = () => {
 
   const mergeAll = async (type: string) => {
     const accessToken = localStorage.getItem("access_token") || "";
-
+setLoadingState(type === 'queue' ? 'queue' : 'playlist');
     const allTrackUris = (
       await Promise.all(
         chosenalbum.map(async (albumId) => {
@@ -201,6 +207,7 @@ const App = () => {
         }
       );
     }
+    setLoadingState('idle');
     alert("All selected albums have been merged into a new playlist!");
   };
 
@@ -341,17 +348,35 @@ const App = () => {
           </div>
 
           <div className="flex gap-3 w-full sm:w-auto">
-             <button
+            <button
               onClick={() => mergeAll("queue")}
-              className="flex-1 sm:flex-none px-6 py-3 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white font-bold transition-colors border border-neutral-600"
+              disabled={loadingState !== 'idle'}
+              className="flex-1 sm:flex-none flex items-center justify-center min-w-[160px] px-6 py-3 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white font-bold transition-colors border border-neutral-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Add to Queue
+              {loadingState === 'queue' ? (
+                  <>
+                    <div className="text-white"><Spinner /></div>
+                    <span>Processing...</span>
+                  </>
+              ) : (
+                  "Add to Queue"
+              )}
             </button>
+
+            {/* Button 2: Merge Playlist */}
             <button
               onClick={() => mergeAll("whatever")}
-              className="flex-1 sm:flex-none px-8 py-3 rounded-full bg-green-500 hover:bg-green-400 text-black font-bold shadow-lg shadow-green-500/20 transition-all transform hover:scale-105"
+              disabled={loadingState !== 'idle'}
+              className="flex-1 sm:flex-none flex items-center justify-center min-w-[180px] px-8 py-3 rounded-full bg-green-500 hover:bg-green-400 text-black font-bold shadow-lg shadow-green-500/20 transition-all transform hover:scale-105 disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed"
             >
-              Merge Playlist
+              {loadingState === 'playlist' ? (
+                   <>
+                   <Spinner />
+                   <span>Creating...</span>
+                 </>
+              ) : (
+                  "Merge Playlist"
+              )}
             </button>
           </div>
         </div>
