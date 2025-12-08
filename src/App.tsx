@@ -90,10 +90,8 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-neutral-900 text-neutral-200 font-sans selection:bg-green-500 selection:text-white pb-32">
-      {/* Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        {/* Profile Header */}
         {profile && (
           <div className="bg-neutral-800/50 backdrop-blur-sm rounded-2xl p-6 mb-10 flex flex-col md:flex-row items-center gap-6 border border-neutral-700 shadow-xl">
             <div className="relative group">
@@ -121,7 +119,6 @@ const App = () => {
           </div>
         )}
 
-        {/* Albums Grid */}
         {albums && (
           <div>
             <div className="flex items-center justify-between mb-6">
@@ -169,7 +166,7 @@ const App = () => {
                     <h3 className={`font-semibold text-sm truncate ${isSelected ? 'text-green-400' : 'text-neutral-200'}`}>
                       {album.name}
                     </h3>
-                    <p className="text-xs text-neutral-400 mt-1">Album</p>
+                    <p className="text-xs text-neutral-400 mt-1">{album.tracks.total} songs</p>
                   </div>
                 );
               })}
@@ -198,9 +195,10 @@ const App = () => {
           <div className="flex gap-3 w-full sm:w-auto">
              <button
               onClick={() => mergeAll("queue")}
-              className="flex-1 sm:flex-none px-6 py-3 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white font-bold transition-colors border border-neutral-600"
+              className="flex-1 sm:flex-none px-6 py-3 rounded-full disabled:cursor-not-allowed bg-neutral-800 hover:bg-neutral-700 text-white font-bold transition-colors border border-neutral-600"
+            disabled={profile?.product === "free"}
             >
-              Add to Queue
+              Add to Queue (Premium Only)
             </button>
             <button
               onClick={() => mergeAll("whatever")}
