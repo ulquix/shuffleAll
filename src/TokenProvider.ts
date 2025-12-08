@@ -12,11 +12,11 @@ const code = params.get("code");
                 redirectToAuthCodeFlow(import.meta.env.VITE_SPOTIFY_CLIENT_ID);
                 return;
             }
-            if(code){
+           else if(code ){
                 getAccessToken(import.meta.env.VITE_SPOTIFY_CLIENT_ID, code)
             }
     
-            if(token && expiry && now < expiry){
+           else if(token && expiry && now < expiry){
                 console.log("Token is valid:", token);
             }
             else{
