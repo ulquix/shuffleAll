@@ -14,6 +14,7 @@ import type { userProfileExample, savedAlbumsExample } from "./types";
 // 1. The Landing Page Component (New)
 const LandingPage = ({ onLogin }: { onLogin: () => void }) => {
     useEffect(() => {   
+        if(window.location.search.includes("code"))
         onLogin();
     }, []);
   return (
