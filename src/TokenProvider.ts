@@ -14,6 +14,7 @@ const code = params.get("code");
            else if(code && !token ){
             console.log("no token but code exists, getting access token");
               await getAccessToken(import.meta.env.VITE_SPOTIFY_CLIENT_ID, code)
+              window.location.href = "/";
             }
     
            else if(token && expiry && now > expiry){
