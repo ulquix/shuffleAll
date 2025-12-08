@@ -79,7 +79,11 @@ export async function getAccessToken(clientId: string, code: string): Promise<st
     console.error(data);
     throw new Error("Failed to get access token.");
   }
-
+localStorage.setItem("access_token", data.access_token);
+localStorage.setItem("refresh_token", data.refresh_token);
+const expiry = Number(data.expires_in)*1000;
+const totalexpiry = Date.now()+expiry;  
+localStorage.setItem("expiry", totalexpiry.toString());
   return data.access_token;
 }
 
