@@ -22,7 +22,7 @@ export type userProfileExample = {
       "width": 300
     }
   ],
-  "product": "string",
+  "product": string,
   "type": "string",
   "uri": "string"
 }
