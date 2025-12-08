@@ -1,82 +1,98 @@
-import { useEffect ,useState} from "react"
-import Authcomponent from "./TokenProvider"
-import { fetchSavedAlbums ,fetchProfile} from "./script";
-import type { userProfileExample,savedAlbumsExample } from "./types";
+import { useEffect, useState } from "react";
+import Authcomponent from "./TokenProvider";
+import { fetchSavedAlbums, fetchProfile } from "./script";
+import type { savedAlbumsExample, userProfileExample } from "./types";
+
 const App = () => {
-    const [token]  = useState(localStorage.getItem("access_token"));
-    const [profile,setProfile]=useState<userProfileExample>();
-    const [albums,setalbums]=useState<savedAlbumsExample>();
-    const [chosenalbum,setchosenaIbum]=useState<string[]>([]);
-    // const [allsongs,setallsongs]=useState<string[]>([]);
-    const tooglearray = (id:string) => {
-        if ( chosenalbum.includes(id)) {
-            setchosenaIbum(chosenalbum.filter((item) => item !== id));
-        } else {
-            
-            setchosenaIbum([...chosenalbum, id]);
-        }
-    };
-    const mergemAll = () => {
-        // createPlaylist(localStorage.getItem("access_token")||"",profile?.id||"").then((data)=>{
-        //     console.log(data);
-        // })
-    }
-    useEffect(()=>{
-        Authcomponent();
-    },[])
-useEffect(()=>{
-    if (!token) return;
+  const [token, setToken] = useState(localStorage.getItem("access_token"));
+  const [profile, setProfile] = useState<userProfileExample>();
+  const [albums, setAlbums] = useState<savedAlbumsExample>();
+  const [chosenalbum, setChosenAlbum] = useState<string[]>([]);
 
-  const load = async () => {
-    const albumsData = await fetchSavedAlbums(token);
-    setalbums(albumsData);
-
-    const profileData = await fetchProfile(token);
-    setProfile(profileData);
+  const toggleArray = (id: string) => {
+    setChosenAlbum(prev =>
+      prev.includes(id)
+        ? prev.filter(item => item !== id)
+        : [...prev, id]
+    );
   };
 
-  load();
-},[token])
+  useEffect(() => {
+    const run = async () => {
+      await Authcomponent();
+      setToken(localStorage.getItem("access_token"));
+    };
+    run();
+  }, []);
+
+  useEffect(() => {
+    if (!token) return;
+
+    const load = async () => {
+      const albumsData = await fetchSavedAlbums(token);
+      setAlbums(albumsData);
+
+      const profileData = await fetchProfile(token);
+      setProfile(profileData);
+    };
+
+    load();
+  }, [token]);
+
   return (
     <div className="min-h-screen bg-neutral-900 text-teal-50">
-{profile &&
-    <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Welcome, {profile.display_name}!</h1>
-        <p className="mb-2">Email: {profile.email}</p>
-        <p className="mb-2">Country: {profile.country}</p>
-        <p className="mb-2">Product: {profile.product}</p>
-        <img src={profile.images[0].url} height={300} width={300} alt="" />
-    </div>
-}
-{albums &&
-    <div className="p-4">
-        <h2 className="text-xl font-bold mb-4">Your Playlists:</h2>
-        <ul>    
-            {albums.items.map((album)=>(
-                <li key={album.id} className="mb-2">
-                    <p className="font-semibold">{album.name}</p>
-                    <p className="text-sm text-gray-400">By {album.owner.display_name}</p>
-                    <img src={album.images[0].url} height={100} width={100} alt="" onClick={()=>tooglearray(album.id)}/>
-                </li>
-            ))}
-        </ul>
-    </div>
-}
-{chosenalbum.length>1 &&
-    <div className="p-4">
-        <h2 className="text-xl font-bold mb-4">Chosen Playlists IDs:</h2>      
-        <ul>    
-            {chosenalbum.filter(id=>id!=="").map((id)=>(
-                <li key={id} className="mb-2">
-                    <p className="font-semibold">{id}</p>
-                </li>
-            ))}
-        </ul>
-    </div>
-}
-<button onClick={mergemAll}>do it baby</button>
-        </div>
-  )
-}
 
-export default App
+      {profile && (
+        <div className="p-4">
+          <h1 className="text-2xl font-bold mb-4">
+            Welcome, {profile.display_name}!
+          </h1>
+          <p>Email: {profile.email}</p>
+          <p>Country: {profile.country}</p>
+          <p>Product: {profile.product}</p>
+
+          {profile.images?.[0]?.url && (
+            <img src={profile.images[0].url} width={300} height={300} />
+          )}
+        </div>
+      )}
+
+      {albums && (
+        <div className="p-4">
+          <h2 className="text-xl font-bold mb-4">Your Saved Albums:</h2>
+          <ul>
+            {albums.items.map(album => (
+              <li key={album.id} className="mb-2">
+                <p className="font-semibold">{album.name}</p>
+                
+                <img
+                  src={album.images[0].url}
+                  width={100}
+                  height={100}
+                  onClick={() => toggleArray(album.id)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {chosenalbum.length > 1 && (
+        <div className="p-4">
+          <h2 className="text-xl font-bold mb-4">Chosen Album IDs:</h2>
+          <ul>
+            {chosenalbum.map(id => (
+              <li key={id}>
+                <p>{id}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <button onClick={() => {}}>do it baby</button>
+    </div>
+  );
+};
+
+export default App;
