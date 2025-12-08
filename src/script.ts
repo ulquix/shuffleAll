@@ -109,7 +109,7 @@ export async function createPlaylist(token: string, userId: string) {
       'Authorization':`Bearer ${token}`,
       'Content-Type' : 'application/json'
     },
-    data : JSON.stringify({
+    body : JSON.stringify({
       name: "Shuffled All Playlist",
       description: "A playlist with all your songs shuffled together",
       public: true
