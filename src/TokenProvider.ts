@@ -1,9 +1,8 @@
 import { getAccessToken, redirectToAuthCodeFlow } from './script';
 
-const Authcomponent = () => {
+const Authcomponent = async() => {
     const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
-        const dosomething = async() => {
             const token = localStorage.getItem("access_token");
             const expiry = Number(localStorage.getItem("expiry"));
             const refreshToken = localStorage.getItem("refresh_token");
@@ -42,8 +41,7 @@ const code = params.get("code");
         }
             }
         }
-        dosomething();
   
-}
+
 
 export default Authcomponent
