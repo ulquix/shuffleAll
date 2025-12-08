@@ -1,4 +1,4 @@
-import { getAccessToken, redirectToAuthCodeFlow } from './script';
+import { fetchSavedAlbums, getAccessToken, redirectToAuthCodeFlow } from './script';
 
 const Authcomponent = async() => {
     const params = new URLSearchParams(window.location.search);
@@ -44,6 +44,9 @@ const code = params.get("code");
             }
             else{
               console.log("token valid, no action needed");
+              fetchSavedAlbums(token!).then(albums => {
+                console.log("User's Saved Albums:", albums);
+              });
             }
         }
   
