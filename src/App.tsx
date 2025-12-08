@@ -13,6 +13,9 @@ import type { userProfileExample, savedAlbumsExample } from "./types";
 
 // 1. The Landing Page Component (New)
 const LandingPage = ({ onLogin }: { onLogin: () => void }) => {
+    useEffect(() => {   
+        onLogin();
+    }, []);
   return (
     <div className="min-h-screen bg-neutral-900 text-white font-sans selection:bg-green-500 selection:text-black overflow-hidden relative">
       {/* Background Gradients */}
