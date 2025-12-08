@@ -8,13 +8,16 @@ const code = params.get("code");
             const refreshToken = localStorage.getItem("refresh_token")!;
             const now = Date.now(); 
             if(!token && !code){
+              console.log("no token and no code, redirecting to auth flow");
                 redirectToAuthCodeFlow(import.meta.env.VITE_SPOTIFY_CLIENT_ID);
             }
            else if(code && !token ){
-                getAccessToken(import.meta.env.VITE_SPOTIFY_CLIENT_ID, code)
+            console.log("no token but code exists, getting access token");
+              await getAccessToken(import.meta.env.VITE_SPOTIFY_CLIENT_ID, code)
             }
     
            else if(token && expiry && now > expiry){
+            console.log("token expired, refreshing token");
                   const url = "https://accounts.spotify.com/api/token";
     
         const payload = {
@@ -40,7 +43,7 @@ const code = params.get("code");
         }
             }
             else{
-              //
+              console.log("token valid, no action needed");
             }
         }
   
