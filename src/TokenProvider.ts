@@ -11,15 +11,12 @@ const code = params.get("code");
                 redirectToAuthCodeFlow(import.meta.env.VITE_SPOTIFY_CLIENT_ID);
                 return;
             }
-           else if(code && !(token )){
+           else if(code && !token ){
                 getAccessToken(import.meta.env.VITE_SPOTIFY_CLIENT_ID, code)
             }
     
-           else if(token && expiry && now < expiry){
-                return
-            }
-            else{
-                const url = "https://accounts.spotify.com/api/token";
+           else if(token && expiry && now > expiry){
+                  const url = "https://accounts.spotify.com/api/token";
     
         const payload = {
           method: 'POST',
@@ -38,7 +35,13 @@ const code = params.get("code");
         localStorage.setItem('access_token', response.access_token);
         if (response.refresh_token) {
           localStorage.setItem('refresh_token', response.refresh_token);
+           const expiry = Number(response.expires_in) * 1000;
+  const totalexpiry = Date.now() + expiry;
+  localStorage.setItem("expiry", totalexpiry.toString());
         }
+            }
+            else{
+              return
             }
         }
   
