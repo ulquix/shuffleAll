@@ -10,6 +10,7 @@ const code = params.get("code");
             if(!token && !code){
               console.log("no token and no code, redirecting to auth flow");
                 redirectToAuthCodeFlow(import.meta.env.VITE_SPOTIFY_CLIENT_ID);
+                console.log("redirected to auth flow");
             }
            else if(code && !token ){
             console.log("no token but code exists, getting access token");
