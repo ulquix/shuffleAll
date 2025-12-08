@@ -228,9 +228,17 @@ const App = () => {
         {/* Header / Nav for Logged In State */}
         <div className="flex justify-between items-center mb-8">
             <div className="text-xl font-bold text-white flex items-center gap-2">
-                 <div className="w-6 h-6 bg-green-500 rounded-full"></div>
-                 AlbumFlow
-            </div>
+                 <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-black">
+            <svg
+              className="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z" />
+            </svg>
+          </div>
+          AlbumFlow
+        </div>
             <button onClick={() => {localStorage.clear(); window.location.reload()}} className="text-sm text-neutral-400 hover:text-white">Logout</button>
         </div>
 
