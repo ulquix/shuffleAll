@@ -336,7 +336,7 @@ else{
                     <h3 className={`font-semibold text-sm truncate ${isSelected ? 'text-green-400' : 'text-neutral-200'}`}>
                       {album.name}
                     </h3>
-                    <p className="text-xs text-neutral-400 mt-1">Album</p>
+                    <p className="text-xs text-neutral-400 mt-1">{album.tracks.total} songs</p>
                   </div>
                 );
               })}
