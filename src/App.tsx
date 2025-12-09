@@ -352,7 +352,8 @@ else{
           <div className="flex gap-3 w-full sm:w-auto">
             <button
               onClick={() => mergeAll("queue")}
-              disabled={loadingState !== 'idle'}
+              
+              disabled={loadingState !== 'idle' || profile?.product === "free"}
               className="flex-1 sm:flex-none flex items-center justify-center min-w-[160px] px-6 py-3 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white font-bold transition-colors border border-neutral-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loadingState === 'queue' ? (
@@ -361,7 +362,7 @@ else{
                     <span>Processing...</span>
                   </>
               ) : (
-                  "Add to Queue"
+                  "Add to Queue (Premium Only)"
               )}
             </button>
 
