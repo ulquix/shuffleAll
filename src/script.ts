@@ -7,6 +7,7 @@ const scopes = [
   "user-library-read",
   "playlist-modify-public",
   "playlist-modify-private",
+  "user-modify-playback-state",
 ].join(" ");
 
 export async function redirectToAuthCodeFlow(clientId: string) {

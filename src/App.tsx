@@ -191,7 +191,7 @@ setLoadingState(type === 'queue' ? 'queue' : 'playlist');
         setLoadingState('idle');
       }).catch((error) => {
         console.error("Error adding to queue:", error);
-        alert("There was an error adding albums to your queue.");
+        alert(error.message || "An error occurred while adding to queue.");
         setLoadingState('idle');
       });
       return;
