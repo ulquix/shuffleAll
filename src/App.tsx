@@ -187,6 +187,7 @@ setLoadingState(type === 'queue' ? 'queue' : 'playlist');
 
     if (type === "queue" && profile?.product !== "free") {
       await addToQueueBulk(accessToken, allTrackUris).then(() => {
+        
         alert("All selected albums have been added to your queue!");
         setLoadingState('idle');
       }).catch((error) => {
