@@ -186,8 +186,14 @@ setLoadingState(type === 'queue' ? 'queue' : 'playlist');
     }
 
     if (type === "queue" && profile?.product !== "free") {
-      await addToQueueBulk(accessToken, allTrackUris);
-      alert("All selected albums have been added to your queue!");
+      await addToQueueBulk(accessToken, allTrackUris).then(() => {
+        alert("All selected albums have been added to your queue!");
+        setLoadingState('idle');
+      }).catch((error) => {
+        console.error("Error adding to queue:", error);
+        alert("There was an error adding albums to your queue.");
+        setLoadingState('idle');
+      });
       return;
     }
 else if (type === "create"){
