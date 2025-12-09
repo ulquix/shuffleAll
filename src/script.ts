@@ -125,9 +125,10 @@ function delay(ms: number) {
   return new Promise(res => setTimeout(res, ms));
 }
 
+
 export async function addToQueueBulk(token: string, uris: string[]) {
   for (const uri of uris) {
-    await fetch(
+    const res = await fetch(
       `https://api.spotify.com/v1/me/player/queue?uri=${encodeURIComponent(uri)}`,
       {
         method: "POST",
@@ -135,7 +136,11 @@ export async function addToQueueBulk(token: string, uris: string[]) {
       }
     );
 
-    // short delay between calls
-    await delay(400);
+    if (!res.ok) {
+      throw new Error(`Queue request failed for ${uri} with status ${res.status}`);
+    }
+
+    await delay(200);
   }
 }
+
