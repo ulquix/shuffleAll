@@ -190,7 +190,7 @@ setLoadingState(type === 'queue' ? 'queue' : 'playlist');
       alert("All selected albums have been added to your queue!");
       return;
     }
-
+else if (type === "create"){
     const playlist = await createPlaylist(accessToken, profile?.id || "");
 
     for (let i = 0; i < allTrackUris.length; i += 100) {
@@ -210,6 +210,7 @@ setLoadingState(type === 'queue' ? 'queue' : 'playlist');
     setLoadingState('idle');
     alert("All selected albums have been merged into a new playlist!");
   };
+}
 
   useEffect(() => {
     // Only fetch data if we actually have a token
@@ -354,7 +355,7 @@ else{
               onClick={() => mergeAll("queue")}
               
               disabled={loadingState !== 'idle' || profile?.product === "free"}
-              className="flex-1 sm:flex-none flex items-center justify-center min-w-[160px] px-6 py-3 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white font-bold transition-colors border border-neutral-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 sm:flex-none flex items-center justify-center min-w-40 px-6 py-3 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white font-bold transition-colors border border-neutral-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loadingState === 'queue' ? (
                   <>
@@ -368,7 +369,7 @@ else{
 
             {/* Button 2: Merge Playlist */}
             <button
-              onClick={() => mergeAll("whatever")}
+              onClick={() => mergeAll("create")}
               disabled={loadingState !== 'idle'}
               className="flex-1 sm:flex-none flex items-center justify-center min-w-[180px] px-8 py-3 rounded-full bg-green-500 hover:bg-green-400 text-black font-bold shadow-lg shadow-green-500/20 transition-all transform hover:scale-105 disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed"
             >
