@@ -230,7 +230,9 @@ setLoadingState(type === 'queue' ? 'queue' : 'playlist');
   if (!token) {
     return <LandingPage onLogin={handleLogin} />;
   }
-
+else{
+  Authcomponent()
+}
   // If token exists, show the Dashboard (Main App)
   return (
     <div className="min-h-screen bg-neutral-900 text-neutral-200 font-sans selection:bg-green-500 selection:text-white pb-32">
